@@ -1,89 +1,85 @@
-#!/bin/sh
+#!/bin/bash
 
 sudo pacman -S --needed base-devel git
 
-if ! command -v yay &> /dev/null
-then
+if ! hash yay 2>/dev/null; then
     echo "Installing yay"
-    git clone https://aur.archlinux.org/yay.git /tmp/yay
-    cd /tmp/yay
+    cd /tmp || exit
+    git clone https://aur.archlinux.org/yay.git
+    cd /tmp/yay || exit
     makepkg -si
     rm -rf /tmp/yay
 fi
 
-dev_tools=(
+packages=(
+    # dev tools
     rustup
-)
 
-zsh_stuff=(
+    # zsh stuff
     zsh
     zsh-pure-prompt
     zsh-syntax-highlighting
-)
 
-vim_stuff=(
+    # vim stuff
     neovim
     vim
     vim-plug
-)
 
-cli_tools=(
+    # cli tools
     exa
     fd
     fzf
     tokei
     ripgrep
     zoxide
-)
 
-fonts=(
+    # fonts
     noto-fonts
     noto-fonts-cjk
     ttf-fira-code
-)
 
-window_stuff=(
+    # window stuff
     bspwm
     sxhkd
     polybar
     rofi
     xorg
     xorg-xinit
-)
 
-general_stuff=(
+    # general stuff
     networkmanager
     pulseaudio
-)
 
-driver_stuff=(
+    # driver stuff
     intel-ucode
     mesa
     vulkan-radeon
     xf86-video-amdgpu
-)
 
-gui_apps=(
+    # gui apps
     firefox
     code
 )
 
 echo "Installing all packages"
-yay -S --needed $dev_tools $zsh_stuff $vim_stuff $cli_tools $fonts $window_stuff $general_stuff $driver_stuff $gui_apps
+yay -S --needed "${packages[@]}"
 
 echo "Installing rust"
 rustup install stable
 
 echo "Cloning filetruck"
-git clone https://github.com/EamonnLaffey/filetruck.git /tmp/filetruck
-cd /tmp/filetruck
+cd /tmp || exit
+git clone https://github.com/EamonnLaffey/filetruck.git
+cd /tmp/filetruck || exit
 echo "Installing filetruck"
 cargo install --path .
 export PATH=$PATH:$HOME/.cargo/bin
+rm -rf /tmp/filetruck
 
-echo "Clone dotfiles"
-git clone https://github.com/EamonnLaffey/dotfiles.git /tmp/dotfiles
-cd /tmp/dotfiles
+echo "Cloning dotfiles"
+cd /tmp || exit
+git clone https://github.com/EamonnLaffey/dotfiles.git
+cd /tmp/dotfiles || exit
 echo "Dropping off files"
 ./dropoff_linux.sh
-
+rm -rf /tmp/dotfiles
