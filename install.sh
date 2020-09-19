@@ -7,10 +7,6 @@
 # $ useradd -m -G wheel -s /bin/bash eamonn
 # $ passwd eamonn
 
-sudo ln -sf /usr/share/zoneinfo/Australia/Melbourne /etc/localtime
-sudo hwclock --systohc
-sudo locale-gen
-
 sudo pacman -S --needed base-devel git
 
 if ! hash yay 2>/dev/null; then
@@ -100,7 +96,14 @@ echo "Dropping off files"
 ./dropoff_linux.sh
 rm -rf /tmp/dotfiles
 
-echo "Sync clock with the netwroks"
+echo "Making zsh history file"
+mkdir -p ~/.cache/zsh
+touch ~/.cache/zsh/history
+
+echo "Configure time stuff"
+sudo ln -sf /usr/share/zoneinfo/Australia/Melbourne /etc/localtime
+sudo hwclock --systohc
+sudo locale-gen
 sudo ntpd -qg
 
 sudo systemctl enable NetworkManager.service
