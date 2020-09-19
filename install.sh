@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Pre-req: Must have user account
+# $ pacman -S sudo
+# $ visudo
+# uncomment %wheel ALL=(ALL) ALL
+# $ useradd -m -G wheel -s /bin/bash eamonn
+# $ passwd eamonn
+
+sudo ln -sf /usr/share/zoneinfo/Australia/Melbourne /etc/localtime
+sudo hwclock --systohc
+sudo locale-gen
+
 sudo pacman -S --needed base-devel git
 
 if ! hash yay 2>/dev/null; then
@@ -45,10 +56,13 @@ packages=(
     rofi
     xorg
     xorg-xinit
+    xclip
 
     # general stuff
     networkmanager
     pulseaudio
+    ntp
+    openssh
 
     # driver stuff
     intel-ucode
@@ -83,3 +97,9 @@ cd /tmp/dotfiles || exit
 echo "Dropping off files"
 ./dropoff_linux.sh
 rm -rf /tmp/dotfiles
+
+echo "Sync clock with the netwroks"
+sudo ntpd -qg
+
+sudo systemctl enable NetworkManager.service
+# use nmcli or nmtui to set network config
