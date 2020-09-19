@@ -54,6 +54,7 @@ packages=(
     sxhkd
     polybar
     rofi
+    feh
     xorg
     xorg-xinit
     xclip
@@ -63,6 +64,7 @@ packages=(
     pulseaudio
     ntp
     openssh
+    reflector
 
     # driver stuff
     intel-ucode
